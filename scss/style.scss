@@ -1,2 +1,67 @@
 @import "reset";
 @import "variables";
+
+body {
+  font-family: $main-font;
+}
+
+// utilities
+.text-center {
+  text-align: center;
+}
+
+.heading-container {
+  margin-top: 11rem;
+  margin-bottom: 2.4rem;
+}
+
+.progress-container {
+  width: min-content;
+  margin: 32px auto;
+  border-bottom: 1px solid #d9dbe9;
+}
+
+.form-divider {
+  width: 596.26px;
+  margin: 0 auto;
+  border: 1px solid #d9dbe9;
+}
+
+.progress {
+  display: flex;
+  position: relative;
+  margin: 0 auto;
+  width: 538px;
+  align-items: center;
+  &__bar {
+    position: absolute;
+    display: inline-flex;
+    width: 100px;
+    height: 10px;
+    border-radius: 80px;
+    mask: url(../assets/Bar.svg) no-repeat center;
+    z-index: 2;
+    background: $primary-color;
+
+    &--placeholder {
+      background: #eff0f6;
+      z-index: 1;
+    }
+  }
+
+  &__indicator {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    border-radius: 100%;
+    padding: 8;
+    border: none;
+    background: #eff0f6;
+    color: $base-color;
+
+    &--primary {
+      background: $primary-color;
+      color: #eff0f6;
+    }
+  }
+}
