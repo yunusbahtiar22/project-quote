@@ -3,6 +3,7 @@
 
 body {
   font-family: $main-font;
+  background: $background-color;
 }
 
 // utilities
@@ -10,21 +11,64 @@ body {
   text-align: center;
 }
 
+.container {
+  width: 43.5rem;
+  margin: 0 auto;
+
+  &--hero {
+    margin-top: 178.31px;
+  }
+
+  &--form {
+    margin-top: 42px;
+    margin-bottom: 42px;
+    height: min-content;
+    padding: 35px 55px;
+    border: 1px solid #eff0f6;
+    border-radius: 19px;
+    box-shadow: 0px 5px 16px 0px #080f340f;
+  }
+
+  &--progress {
+    width: min-content;
+    margin: 32px auto;
+    padding-bottom: 32px;
+  }
+
+  &--actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+  }
+}
+
+.hero {
+  &__heading {
+    font-size: 34px;
+    font-weight: 700;
+    color: $accent-color;
+  }
+
+  &__text {
+    width: 566.41px;
+    margin: 0 auto;
+    padding: 5px;
+    font-size: 18px;
+    font-weight: 400;
+    color: $base-color;
+  }
+}
+
 .heading-container {
   margin-top: 11rem;
   margin-bottom: 2.4rem;
 }
 
-.progress-container {
-  width: min-content;
-  margin: 32px auto;
-  border-bottom: 1px solid #d9dbe9;
-}
-
 .form-divider {
-  width: 596.26px;
+  width: 100%;
   margin: 0 auto;
-  border: 1px solid #d9dbe9;
+  border: none;
+  border-bottom: 1px solid #d9dbe9;
 }
 
 .progress {
@@ -63,5 +107,180 @@ body {
       background: $primary-color;
       color: #eff0f6;
     }
+  }
+}
+
+.action-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.action-button {
+  padding: 19px 40px;
+  border-radius: 56px;
+  border: 1px solid $primary-color;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 20px;
+
+  &--next {
+    background: $primary-color;
+    color: $background-color;
+  }
+
+  &--prev {
+    color: $primary-color;
+    background: $background-color;
+  }
+}
+
+.form {
+  display: grid;
+  width: 596.26px;
+  margin: 64px auto;
+  grid-template-columns: repeat(2, minmax(284px, auto));
+  grid-template-rows: repeat(3, 104px);
+  column-gap: 28px;
+  row-gap: 44px;
+
+  &__header {
+    grid-column: 1 / 3;
+
+    h2 {
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 35px;
+      color: #170f49;
+    }
+
+    p {
+      color: #6f6c90;
+    }
+  }
+
+  &__label {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 20px;
+    color: #170f49;
+    margin-bottom: 18px;
+  }
+
+  &__input {
+    width: 100%;
+    height: 66px;
+    border-radius: 46px;
+    border: 1px solid #eff0f6;
+    box-shadow: 0px 2px 6px rgba(19, 18, 66, 0.07);
+    background: $background-color;
+    padding: 21px 20px 24px 20px;
+  }
+}
+
+.text-input {
+  display: flex;
+  justify-content: space-between;
+  padding: 21px 20px 20px 24px;
+  border-radius: 46px;
+  background: #ffffff;
+  border: 1px solid #eff0f7;
+  box-shadow: 0px 2px 6px rgba(19, 18, 66, 0.07);
+
+  &:focus-within {
+    outline: 1px solid $primary-color;
+  }
+
+  &__field {
+    flex-basis: 85%;
+    &::placeholder {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 20px;
+      color: $base-color;
+    }
+  }
+}
+
+.radio-group {
+  @extend .form;
+  grid-template-rows: 104px repeat(2, 114px);
+  row-gap: 21px;
+  &__control {
+    display: grid;
+    align-items: center;
+    gap: 12px;
+    padding: 24px;
+    grid-template-columns: 1.5rem auto;
+    grid-template-rows: auto;
+    border-radius: 16px;
+    border: 1px solid #eff0f6;
+    box-shadow: 0px 5px 16px #eff0f6;
+    font-size: 18px;
+    font-weight: 500;
+    color: $accent-color;
+
+    &--icon {
+      grid-template-columns: 0 66px auto;
+    }
+
+    &:focus-within {
+      outline: 1px solid $primary-color;
+    }
+  }
+  &__radio {
+    appearance: none;
+    background-color: var(--form-background);
+    margin: 0;
+    font: inherit;
+    // color: $primary-color;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 1px solid #d9dbe9;
+    border-radius: 50%;
+    transform: translateY(-0.075em);
+
+    display: grid;
+    place-content: center;
+
+    &::before {
+      content: "";
+      width: 0.5em;
+      height: 0.5em;
+      border-radius: 50%;
+      transform: scale(0);
+      transition: 100ms transform ease-in-out;
+      // box-shadow: inset 1em 1em white;
+      background-color: white;
+    }
+
+    &:checked::before {
+      transform: scale(1);
+    }
+
+    &:focus {
+      background: $primary-color;
+    }
+  }
+}
+
+.icon-container {
+  width: 66px;
+  height: 66px;
+  display: inline-grid;
+  place-items: center;
+  margin-right: 12px;
+  position: relative;
+  border-radius: 100%;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: $primary-color;
+    opacity: 15%;
   }
 }
