@@ -72,3 +72,22 @@ select {
     scroll-behavior: auto !important;
   }
 }
+
+label,
+input {
+  display: block;
+}
+
+input {
+  border: none;
+  padding: 0;
+}
+
+textarea:focus,
+input:focus {
+  outline: none;
+}
+
+fieldset {
+  border: none;
+}
