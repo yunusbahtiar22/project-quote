@@ -1,54 +1,88 @@
 const FormContext = React.createContext(null)
 const FormDispatchContext = React.createContext(null)
 
-function App() {
-  return (
-    <FormContext.Provider>
-      <FormDispatchContext.Provider>
-        <Main />
-      </FormDispatchContext.Provider>
-    </FormContext.Provider>
-  );
+const formReducer = (state, action) => {
+  switch (action.type) {
+    case "set_contact":
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          ...action.payload
+        }
+      }
+    case "set_service":
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          service: action.payload
+        }
+      }
+    case "set_budget":
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          budget: action.payload
+        }
+      }
+    case "next_form":
+      return {
+        ...state,
+        currentForm: state.currentForm + 1
+      }
+    case "prev_form":
+      return {
+        ...state,
+        currentForm: state.currentForm - 1
+      }
+    default:
+      return state;
+  }
 }
 
-function Main() {
-  return (
-    <main>
-      <section className="hero container--hero">
-        <h1 className="hero__heading text-center">Get a project quote</h1>
-        <p className="hero__text text-center">Please fill the form below to receive a quote for your project. Feel<br /> free to add as much detail as needed.</p>
-      </section>
-      <section>
-        <FormContainer>
-          <ContactForm />
-          <ServiceForm />
-          <BudgetForm />
-        </FormContainer>
-      </section>
-    </main>
-  )
+const appData = {
+  form: {
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    service: "",
+    budget: ""
+  },
+  currentForm: 0,
+  step: 0.5
 }
 
-function FormContainer({ children }) {
+const FormContainer = (props) => {
+  const { currentForm } = React.useContext(FormContext)
+  const dispatch = React.useContext(FormDispatchContext)
+  const handleNext = () => { dispatch({ type: "next_form" }) }
+  const handlePrev = () => { dispatch({ type: "prev_form" }) }
   return (
     <>
       <div className="container container--form">
         <div className="container container--progress">
-          <Progress percentage={1.5} />
+          <Progress step={currentForm === 0 ? 0.5 : currentForm === 1 ? 1.5 : currentForm === 2 ? 2.5 : 3} />
         </div>
         <hr className="form-divider" />
-        {children[2]}
+        {props.children[currentForm]}
       </div>
       <div className="container container--actions">
-        <button className="action-button action-button--prev">Previous Step</button>
-        <button className="action-button action-button--next">Next Step</button>
+        <div>
+          {currentForm > 0 && <button onClick={handlePrev} className="action-button action-button--prev">Previous Step</button>}
+        </div>
+        <div style={{ justifySelf: "end" }}>
+          {currentForm < props.children.length - 1 && <button onClick={handleNext} className="action-button action-button--next">Next Step</button>}
+        </div>
       </div>
     </>
   )
 }
 
-function Progress({ percentage }) {
-  const fraction = Number(percentage) % 1
+const Progress = (props) => {
+  const fraction = Number(props.step) % 1
   const placeholderBars = []
   const bars = []
   const indicators = []
@@ -60,7 +94,7 @@ function Progress({ percentage }) {
     } key={`$placeholder-${i}`}></div >)
   }
 
-  for (let i = 0; i < percentage - fraction; i++) {
+  for (let i = 0; i < props.step - fraction; i++) {
     bars.push(<div className="progress__bar" style={{
       left: (i == 0 ? i + 52 : i * 168 + 52)
     }
@@ -68,7 +102,7 @@ function Progress({ percentage }) {
     leftOffset += 98 + 70
   }
 
-  if (fraction > 0 && percentage <= 3) {
+  if (fraction > 0 && props.step <= 3) {
     bars.push(<div className="progress__bar" style={{
       left: leftOffset,
       width: 0.5 * 98
@@ -77,7 +111,7 @@ function Progress({ percentage }) {
   }
 
   for (let i = 0; i < 4; i++) {
-    indicators.push(<button className={`progress__indicator${i <= percentage - fraction ? " progress__indicator--primary" : ""}`} style={{ left: i * 168 }} key={`$indicator-${i}`}>{i + 1}</button>)
+    indicators.push(<button className={`progress__indicator${i <= props.step - fraction ? " progress__indicator--primary" : ""}`} style={{ left: i * 168 }} key={`$indicator-${i}`}>{i + 1}</button>)
   }
 
   return (
@@ -89,7 +123,8 @@ function Progress({ percentage }) {
   )
 }
 
-function ContactForm() {
+const ContactForm = () => {
+  const nameRef = React.useRef(null)
   return (
     <form className="form">
       <div className="form__header">
@@ -116,7 +151,7 @@ function ContactForm() {
   )
 }
 
-function ServiceForm() {
+const ServiceForm = () => {
   return (
     <form className="radio-group">
       <div className="form__header">
@@ -216,7 +251,7 @@ function ServiceForm() {
   )
 }
 
-function BudgetForm() {
+const BudgetForm = () => {
   return (
     <form className="radio-group">
       <div className="form__header">
@@ -243,14 +278,14 @@ function BudgetForm() {
   )
 }
 
-function TextInput(props) {
+const TextInput = React.forwardRef((props, ref) => {
   return (
     <div className="text-input">
-      <input className="text-input__field" type="text" placeholder={props.placeholder} />
+      <input className="text-input__field" ref={ref} type="text" placeholder={props.placeholder} />
       {props.icon}
     </div >
   )
-}
+})
 
 // function RadioButton(props) {
 //   return (
@@ -263,7 +298,7 @@ function TextInput(props) {
 //   )
 // }
 
-function PersonIcon() {
+const PersonIcon = () => {
   return (
     <svg width="23" height="29" viewBox="0 0 23 29" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M11.5629 14.2939C15.0647 14.2939 17.9034 11.4552 17.9034 7.95337C17.9034 4.45156 15.0647 1.61279 11.5629 1.61279C8.06106 1.61279 5.22229 4.45156 5.22229 7.95337C5.22229 11.4552 8.06106 14.2939 11.5629 14.2939Z" stroke="#A0A3BD" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
@@ -272,7 +307,7 @@ function PersonIcon() {
   )
 }
 
-function MailIcon() {
+const MailIcon = () => {
   return (
     <svg width="25" height="19" viewBox="0 0 25 19" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M21.9883 1.52588H2.98828C1.88371 1.52588 0.988281 2.42131 0.988281 3.52588V15.5259C0.988281 16.6304 1.88371 17.5259 2.98828 17.5259H21.9883C23.0929 17.5259 23.9883 16.6304 23.9883 15.5259V3.52588C23.9883 2.42131 23.0929 1.52588 21.9883 1.52588Z" stroke="#A0A3BD" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
@@ -281,7 +316,7 @@ function MailIcon() {
   )
 }
 
-function PhoneIcon() {
+const PhoneIcon = () => {
   return (
     <svg width="17" height="29" viewBox="0 0 17 29" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M13.2434 1.51172H3.06946C1.82082 1.51172 0.808594 2.52394 0.808594 3.77259V25.2508C0.808594 26.4995 1.82082 27.5117 3.06946 27.5117H13.2434C14.492 27.5117 15.5042 26.4995 15.5042 25.2508V3.77259C15.5042 2.52394 14.492 1.51172 13.2434 1.51172Z" stroke="#A0A3BD" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
@@ -290,7 +325,7 @@ function PhoneIcon() {
   )
 }
 
-function BuildingIcon() {
+const BuildingIcon = () => {
   return (
     <svg width="17" height="32" viewBox="0 0 17 32" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M15.399 30.5116V6.86729C15.3989 6.6139 15.3191 6.36696 15.171 6.16138C15.0229 5.9558 14.8139 5.80198 14.5736 5.72168L2.50606 1.69918C2.32461 1.63837 2.13128 1.62165 1.94208 1.65039C1.75289 1.67914 1.57325 1.75253 1.41805 1.86449C1.26285 1.97644 1.13654 2.12375 1.04958 2.29422C0.962622 2.46469 0.917507 2.65342 0.917972 2.84479V30.5116" stroke="#A0A3BD" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
@@ -305,4 +340,34 @@ function BuildingIcon() {
   )
 }
 
-ReactDOM.render(<App />, document.querySelector("#root"));
+const Main = () => {
+  return (
+    <main>
+      <section className="hero container--hero">
+        <h1 className="hero__heading text-center">Get a project quote</h1>
+        <p className="hero__text text-center">Please fill the form below to receive a quote for your project. Feel<br /> free to add as much detail as needed.</p>
+      </section>
+      <section>
+        <FormContainer>
+          <ContactForm />
+          <ServiceForm />
+          <BudgetForm />
+        </FormContainer>
+      </section>
+    </main>
+  )
+}
+
+const App = () => {
+  const [data, dispatch] = React.useReducer(formReducer, appData)
+  return (
+    <FormContext.Provider value={data} >
+      <FormDispatchContext.Provider value={dispatch}>
+        <Main />
+      </FormDispatchContext.Provider>
+    </FormContext.Provider>
+  );
+}
+
+
+ReactDOM.render(<App />, document.querySelector("#root"))
