@@ -230,11 +230,14 @@ body {
       outline: 1px solid $primary-color;
     }
   }
+  &__invisible-radio {
+    appearance: none;
+  }
+
   &__radio {
     appearance: none;
-    background-color: var(--form-background);
+    background-color: #fff;
     margin: 0;
-    font: inherit;
     // color: $primary-color;
     width: 1.5rem;
     height: 1.5rem;
