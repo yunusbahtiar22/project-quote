@@ -16,7 +16,7 @@ body {
   margin: 0 auto;
 
   &--hero {
-    margin-top: 178.31px;
+    margin-top: 2rem;
   }
 
   &--form {
@@ -36,8 +36,9 @@ body {
   }
 
   &--actions {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
     margin-top: 1.5rem;
   }
 }
