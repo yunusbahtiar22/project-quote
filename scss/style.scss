@@ -262,6 +262,10 @@ h6 {
     display: grid;
     place-content: center;
 
+    &:checked + label {
+      outline: 1px solid $primary-color;
+    }
+
     &:checked {
       background: $primary-color;
     }
@@ -272,21 +276,13 @@ h6 {
       height: 0.5em;
       border-radius: 50%;
       transform: scale(0);
-      // transition: 100ms transform ease-in-out;
+      transition: 120ms transform ease-in-out;
       // box-shadow: inset 1em 1em white;
       background-color: white;
     }
 
     &:checked::before {
       transform: scale(1);
-    }
-
-    // &:focus {
-    //   background: $primary-color;
-    // }
-
-    &:checked + label {
-      outline: 1px solid $primary-color;
     }
   }
 }

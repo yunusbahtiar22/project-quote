@@ -1,29 +1,39 @@
 const FormContext = React.createContext(null)
 const FormDispatchContext = React.createContext(null)
 
+const isValidEmail = (email) => {
+  const pattern = /^[a-z0-9](\.?[a-z0-9]){5,}@gmail\.com$/
+  return pattern.test(email)
+}
+
+// const isValidPhone = (number) => {
+//   const stringNumber = String(number)
+//   const pattern = //
+// }
+
 const formReducer = (state, action) => {
   switch (action.type) {
     case "set_contact":
       return {
         ...state,
-        form: {
-          ...state.form,
+        data: {
+          ...state.data,
           ...action.payload
         }
       }
     case "set_service":
       return {
         ...state,
-        form: {
-          ...state.form,
+        data: {
+          ...state.data,
           service: action.payload
         }
       }
     case "set_budget":
       return {
         ...state,
-        form: {
-          ...state.form,
+        data: {
+          ...state.data,
           budget: action.payload
         }
       }
@@ -48,8 +58,8 @@ const appData = {
     email: "yunus@gmail.com",
     phone: "0822126376",
     company: "anyth.inc",
-    service: "",
-    budget: ""
+    service: "development",
+    budget: "50.000"
   },
   currentForm: 0,
   step: 0.5
@@ -131,17 +141,20 @@ const Progress = (props) => {
 const ContactForm = () => {
   const { data, currentForm } = React.useContext(FormContext)
   const dispatch = React.useContext(FormDispatchContext)
-  React.useEffect(() => { console.log(data) })
+
+  // logging
+  // React.useEffect(() => { console.log(data) })
+
   const nameRef = React.useRef(null)
   const emailRef = React.useRef(null)
   const phoneRef = React.useRef(null)
   const companyRef = React.useRef(null)
-  const submitHandler = (e) => {
+  const onSubmitHandler = (e) => {
     e.preventDefault()
     dispatch({ type: "next_form" })
   }
   return (
-    <form onSubmit={submitHandler}>
+    <form onSubmit={onSubmitHandler}>
       <div className="form-container">
         <div className="progress-container">
           <Progress step={currentForm === 0 ? 0.5 : currentForm === 1 ? 1.5 : currentForm === 2 ? 2.5 : 3} />
@@ -154,19 +167,19 @@ const ContactForm = () => {
           </div>
           <div>
             <label className="form__label" htmlFor="name">Name</label>
-            <TextInput type="text" ref={nameRef} icon={<PersonIcon />} placeholder={"Name"} defaultValue={data.name} />
+            <TextInput type="text" ref={nameRef} icon={<PersonIcon />} id="name" placeholder={"Name"} defaultValue={data.name} />
           </div>
           <div>
             <label className="form__label" htmlFor="email">Email</label>
-            <TextInput type="email" ref={emailRef} icon={<MailIcon />} placeholder={"Email"} defaultValue={data.email} />
+            <TextInput type="email" ref={emailRef} icon={<MailIcon />} id="email" placeholder={"Email"} defaultValue={data.email} />
           </div>
           <div>
             <label className="form__label" htmlFor="phone">Phone Number</label>
-            <TextInput type="text" ref={phoneRef} icon={<PhoneIcon />} placeholder={"Phone Number"} defaultValue={data.phone} />
+            <TextInput type="text" ref={phoneRef} icon={<PhoneIcon />} id="phone" placeholder={"Phone Number"} defaultValue={data.phone} />
           </div>
           <div>
             <label className="form__label" htmlFor="company">Company</label>
-            <TextInput type="text" ref={companyRef} icon={<BuildingIcon />} placeholder={"Company"} defaultValue={data.company} />
+            <TextInput type="text" ref={companyRef} icon={<BuildingIcon />} id="company" placeholder={"Company"} defaultValue={data.company} />
           </div>
         </div>
       </div>
@@ -184,13 +197,24 @@ const ContactForm = () => {
 
 const ServiceForm = () => {
   const dispatch = React.useContext(FormDispatchContext)
-  const { currentForm } = React.useContext(FormContext)
-  const submitHandler = (e) => {
+  const { data, currentForm } = React.useContext(FormContext)
+
+  // logging
+  // React.useEffect(() => {
+  //   console.log(data.service)
+  // })
+
+  const onChangeHandler = (e) => {
+    dispatch({ type: "set_service", payload: e.target.value })
+  }
+
+  const onSubmitHandler = (e) => {
     e.preventDefault()
     dispatch({ type: "next_form" })
   }
+
   return (
-    <form onSubmit={submitHandler}>
+    <form onSubmit={onSubmitHandler}>
       <div className="form-container">
         <div className="progress-container">
           <Progress step={currentForm === 0 ? 0.5 : currentForm === 1 ? 1.5 : currentForm === 2 ? 2.5 : 3} />
@@ -202,28 +226,28 @@ const ServiceForm = () => {
             <p>Please select which service you are interested in.</p>
           </div>
           <div className="radio-group__item">
-            <input type="radio" className="radio-group--dnone" name="services" id="development" defaultChecked />
+            <input type="radio" className="radio-group--dnone" name="services" onChange={onChangeHandler} id="development" value="development" checked={data.service === "development"} />
             <label className="radio-group__control" htmlFor="development">
               <DevelopmentIcon />
               Development
             </label>
           </div>
           <div className="radio-group__item">
-            <input type="radio" className="radio-group--dnone" name="services" id="design" />
+            <input type="radio" className="radio-group--dnone" name="services" onChange={onChangeHandler} id="design" value="design" checked={data.service === "design"} />
             <label className="radio-group__control" htmlFor="design">
               <DesignIcon />
               Design
             </label>
           </div>
           <div className="radio-group__item">
-            <input type="radio" className="radio-group--dnone" name="services" id="marketing" />
+            <input type="radio" className="radio-group--dnone" name="services" onChange={onChangeHandler} id="marketing" value="marketing" checked={data.service === "marketing"} />
             <label className="radio-group__control" htmlFor="marketing">
               <MarketingIcon />
               Marketing
             </label>
           </div>
           <div className="radio-group__item">
-            <input type="radio" className="radio-group--dnone" name="services" id="other" />
+            <input type="radio" className="radio-group--dnone" name="services" onChange={onChangeHandler} id="other" value="other" checked={data.service === "other"} />
             <label className="radio-group__control" htmlFor="other">
               <DevelopmentIcon />
               Other
@@ -245,13 +269,24 @@ const ServiceForm = () => {
 
 const BudgetForm = () => {
   const dispatch = React.useContext(FormDispatchContext)
-  const { currentForm } = React.useContext(FormContext)
-  const submitHandler = (e) => {
+  const { data, currentForm } = React.useContext(FormContext)
+
+  const onChangeHandler = (e) => {
+    dispatch({ type: "set_budget", payload: e.target.value })
+  }
+
+  const onSubmitHandler = (e) => {
     e.preventDefault()
     dispatch({ type: "next_form" })
   }
+
+  // logging
+  // React.useEffect(() => {
+  //   console.log(data.budget)
+  // })
+
   return (
-    <form onSubmit={submitHandler}>
+    <form onSubmit={onSubmitHandler}>
       <div className="form-container">
         <div className="progress-container">
           <Progress step={currentForm === 0 ? 0.5 : currentForm === 1 ? 1.5 : currentForm === 2 ? 2.5 : 3} />
@@ -263,25 +298,25 @@ const BudgetForm = () => {
             <p>Please select the project budget you have in mind.</p>
           </div>
           <div className="radio-group__item">
-            <input type="radio" className="radio-group__radio" name="budget" id="choice1" value="5000" />
+            <input type="radio" className="radio-group__radio radio-group--dnone" name="budget" checked={data.budget === "5.000"} onChange={onChangeHandler} id="choice1" value="5.000" />
             <label className="radio-group__control-budget" htmlFor="choice1">
               $5.000 - $10.000
             </label>
           </div>
           <div className="radio-group__item">
-            <input type="radio" className="radio-group__radio" name="budget" id="choice2" value="10000" />
+            <input type="radio" className="radio-group__radio" name="budget" id="choice2" value="10.000" checked={data.budget === "10.000"} onChange={onChangeHandler} />
             <label className="radio-group__control-budget" htmlFor="choice2">
               $10.000 - $20.000
             </label>
           </div>
           <div className="radio-group__item">
-            <input type="radio" className="radio-group__radio" name="budget" id="choice3" value="20000" />
+            <input type="radio" className="radio-group__radio" name="budget" id="choice3" value="20.000" checked={data.budget === "20.000"} onChange={onChangeHandler} />
             <label className="radio-group__control-budget" htmlFor="choice3">
               $20.000 - $50.000
             </label>
           </div>
           <div className="radio-group__item">
-            <input type="radio" className="radio-group__radio" name="budget" id="choice4" value="50000" defaultChecked />
+            <input type="radio" className="radio-group__radio" name="budget" id="choice4" value="50.000" checked={data.budget === "50.000"} onChange={onChangeHandler} />
             <label className="radio-group__control-budget" htmlFor="choice4">
               $50.000 +
             </label>
@@ -302,10 +337,14 @@ const BudgetForm = () => {
 }
 
 const SubmitForm = () => {
-  const { currentForm } = React.useContext(FormContext)
+  const { data, currentForm } = React.useContext(FormContext)
   const dispatch = React.useContext(FormDispatchContext)
+  const onSubmitHandler = (e) => {
+    e.preventDefault()
+    alert(JSON.stringify(data))
+  }
   return (
-    <form onSubmit={() => { }}>
+    <form onSubmit={onSubmitHandler}>
       <div className="form-container">
         <div className="progress-container">
           <Progress step={currentForm === 0 ? 0.5 : currentForm === 1 ? 1.5 : currentForm === 2 ? 2.5 : 3} />
@@ -315,7 +354,7 @@ const SubmitForm = () => {
           <img src="assets/Group37301.png" alt="" />
           <h2 className="display-3 text-center">Submit your quote request</h2>
           <p className="text-base text-center">Please review all the information you previously typed in the past steps, and if all is okay, submit your message to receive a project quote in 24 - 48 hours.</p>
-          <button className="btn btn--primary">Submit</button>
+          <button type="submit" className="btn btn--primary">Submit</button>
         </div>
       </div>
       <div className="actions-container">
@@ -327,21 +366,13 @@ const SubmitForm = () => {
         </div>
       </div>
     </form>
-
-
-    // <div className="submit-form">
-    //   <img src="assets/Group37301.png" alt="" />
-    //   <h2 className="display-3 text-center">Submit your quote request</h2>
-    //   <p className="text-base text-center">Please review all the information you previously typed in the past steps, and if all is okay, submit your message to receive a project quote in 24 - 48 hours.</p>
-    //   <button className="btn btn--primary">Submit</button>
-    // </div>
   )
 }
 
 const TextInput = React.forwardRef((props, ref) => {
   return (
     <div className="text-input">
-      <input className="text-input__field" ref={ref} type={props.type} placeholder={props.placeholder} defaultValue={props.defaultValue} />
+      <input className="text-input__field" required={props.required} ref={ref} type={props.type} placeholder={props.placeholder} defaultValue={props.defaultValue} {...props} />
       {props.icon}
     </div >
   )
@@ -389,7 +420,7 @@ const BuildingIcon = () => {
   )
 }
 
-const DevelopmentIcon = () => (
+const DesignIcon = () => (
   <svg width="67" height="68" viewBox="0 0 67 68" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle opacity="0.15" cx="33.4498" cy="34.0142" r="33.3209" fill="#4A3AFF" />
     <g filter="url(#filter0_d_901_14026)">
@@ -415,7 +446,7 @@ const DevelopmentIcon = () => (
   </svg>
 )
 
-const DesignIcon = () => (
+const DevelopmentIcon = () => (
   <svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle opacity="0.15" cx="34.1314" cy="33.9225" r="33.3209" fill="#4A3AFF" />
     <g filter="url(#filter0_d_2203_6)">
