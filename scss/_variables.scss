@@ -6,3 +6,5 @@ $accent-color: #170f49;
 $primary-color: #4a3aff;
 $secondary-color: #962dff;
 $main-font: "DM sans", sans-serif;
+$primary-color-darken: darken($primary-color, 3%);
+$background-color-darken: darken($background-color, 7%);

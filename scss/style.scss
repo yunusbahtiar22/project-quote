@@ -6,63 +6,76 @@ body {
   background: $background-color;
 }
 
+h1,
+h2,
+h3,
+h4,
+h4,
+h5,
+h6 {
+  color: $accent-color;
+}
+
 // utilities
 .text-center {
   text-align: center;
 }
 
-.container {
-  width: 43.5rem;
-  margin: 0 auto;
-
-  &--hero {
-    margin-top: 2rem;
-  }
-
-  &--form {
-    margin-top: 42px;
-    margin-bottom: 42px;
-    height: min-content;
-    padding: 35px 55px;
-    border: 1px solid #eff0f6;
-    border-radius: 19px;
-    box-shadow: 0px 5px 16px 0px #080f340f;
-  }
-
-  &--progress {
-    width: min-content;
-    margin: 32px auto;
-    padding-bottom: 32px;
-  }
-
-  &--actions {
-    display: grid;
-    grid-template-columns: auto auto;
-    align-items: center;
-    margin-top: 1.5rem;
-  }
+.display-2 {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 46px;
 }
 
-.hero {
-  &__heading {
-    font-size: 34px;
-    font-weight: 700;
-    color: $accent-color;
-  }
+.display-3 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 46px;
+}
 
-  &__text {
+.text-base {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 30px;
+  color: $base-color;
+}
+
+.container {
+  width: 45.625rem;
+  margin: 0 auto;
+}
+
+.heading {
+  margin-top: 2rem;
+  p {
     width: 566.41px;
     margin: 0 auto;
     padding: 5px;
-    font-size: 18px;
-    font-weight: 400;
-    color: $base-color;
   }
 }
 
-.heading-container {
-  margin-top: 11rem;
-  margin-bottom: 2.4rem;
+.form-container {
+  margin-top: 42px;
+  margin-bottom: 42px;
+  height: 690px;
+  padding: 35px 55px;
+  border: 1px solid #eff0f6;
+  border-radius: 19px;
+  box-shadow: 0px 5px 16px 0px rgba(8, 15, 52, 0.06);
+}
+
+.progress-container {
+  width: min-content;
+  margin: 32px auto;
+  padding-bottom: 32px;
+}
+
+.actions-container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  margin-top: 1.5rem;
 }
 
 .form-divider {
@@ -111,28 +124,34 @@ body {
   }
 }
 
-.action-container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.action-button {
+.btn {
   padding: 19px 40px;
   border-radius: 56px;
-  border: 1px solid $primary-color;
+  border: none;
   font-size: 18px;
   font-weight: 400;
   line-height: 20px;
 
-  &--next {
+  &--primary {
     background: $primary-color;
     color: $background-color;
+    border: 1px solid $primary-color;
+
+    &:hover {
+      background: $primary-color-darken;
+    }
   }
 
-  &--prev {
+  &--outline {
     color: $primary-color;
     background: $background-color;
+    border: 1px solid $primary-color;
+
+    &:hover {
+      background: $background-color-darken;
+    }
   }
+
 }
 
 .form {
@@ -140,23 +159,12 @@ body {
   width: 596.26px;
   margin: 64px auto;
   grid-template-columns: repeat(2, minmax(284px, auto));
-  grid-template-rows: repeat(3, 104px);
+  grid-template-rows: repeat(3, 114px);
   column-gap: 28px;
   row-gap: 44px;
 
   &__header {
     grid-column: 1 / 3;
-
-    h2 {
-      font-weight: 700;
-      font-size: 24px;
-      line-height: 35px;
-      color: #170f49;
-    }
-
-    p {
-      color: #6f6c90;
-    }
   }
 
   &__label {
@@ -169,6 +177,11 @@ body {
     margin-bottom: 18px;
   }
 
+  &__label--error {
+    @extend .form__label;
+    color: #962dff;
+  }
+
   &__input {
     width: 100%;
     height: 66px;
@@ -178,23 +191,50 @@ body {
     background: $background-color;
     padding: 21px 20px 24px 20px;
   }
+
+  &--submitted {
+    input:invalid {
+      outline: 1px solid $secondary-color;
+    }
+
+    input:invalid:focus {
+      outline: 1px solid $secondary-color;
+    }
+  }
 }
 
 .text-input {
-  display: flex;
-  justify-content: space-between;
-  padding: 21px 20px 20px 24px;
-  border-radius: 46px;
-  background: #ffffff;
-  border: 1px solid #eff0f7;
-  box-shadow: 0px 2px 6px rgba(19, 18, 66, 0.07);
+  width: 100%;
+  height: 100%;
+  display: grid;
 
-  &:focus-within {
-    outline: 1px solid $primary-color;
+  &__label {
+    @extend .form__label;
+    order: 0;
+    margin-bottom: 16px;
+  }
+
+  &__label--error {
+    @extend .text-input__label;
+    color: $secondary-color;
   }
 
   &__field {
-    flex-basis: 85%;
+    position: relative;
+    width: 284px;
+    height: 66px;
+    order: 1;
+  }
+
+  &__input {
+    width: 100%;
+    height: 100%;
+    border-radius: 46px;
+    background: #ffffff;
+    border: 1px solid #eff0f7;
+    box-shadow: 0px 2px 6px rgba(19, 18, 66, 0.07);
+    padding: 21px 25% 20px 24px;
+    
     &::placeholder {
       font-style: normal;
       font-weight: 400;
@@ -202,6 +242,33 @@ body {
       line-height: 20px;
       color: $base-color;
     }
+
+    &:focus {
+      outline: 1px solid $primary-color;
+    }
+
+    // &:invalid {
+    //   outline: 1px solid $secondary-color;
+    // }
+
+    // &:invalid:focus {
+    //   outline: 1px solid $secondary-color;
+    // }
+  }
+
+  &__error-msg {
+    margin-top: 10px;
+    order: 2;
+    color: $secondary-color;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 20px;
+  }
+
+  &__icon {
+    position: absolute;
+    top: 17px;
+    right: 32px;
   }
 }
 
@@ -209,34 +276,48 @@ body {
   @extend .form;
   grid-template-rows: 104px repeat(2, 114px);
   row-gap: 21px;
-  &__control {
-    display: grid;
-    align-items: center;
-    gap: 12px;
-    padding: 24px;
-    grid-template-columns: 1.5rem auto;
-    grid-template-rows: auto;
+
+  &__item {
+    position: relative;
+    padding: 0;
     border-radius: 16px;
     border: 1px solid #eff0f6;
     box-shadow: 0px 5px 16px #eff0f6;
-    font-size: 18px;
+  }
+
+  &__control {
+    display: grid;
+    padding: 23px 25px 24px 25px;
+    grid-template-columns: 66px 1fr;
+    column-gap: 12px;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
     font-weight: 500;
+    font-size: 18px;
+    line-height: 20px;
     color: $accent-color;
+  }
 
-    &--icon {
-      grid-template-columns: 0 66px auto;
-    }
+  &__control-budget {
+    @extend .radio-group__control;
+    grid-template-columns: 1fr;
+    padding-left: 70px;
+  }
 
-    &:focus-within {
+  &--dnone {
+    display: none;
+    &:checked + label {
       outline: 1px solid $primary-color;
     }
-  }
-  &__invisible-radio {
-    appearance: none;
   }
 
   &__radio {
     appearance: none;
+    position: absolute;
+    top: 45px;
+    left: 32px;
     background-color: #fff;
     margin: 0;
     // color: $primary-color;
@@ -249,13 +330,21 @@ body {
     display: grid;
     place-content: center;
 
+    &:checked + label {
+      outline: 1px solid $primary-color;
+    }
+
+    &:checked {
+      background: $primary-color;
+    }
+
     &::before {
       content: "";
       width: 0.5em;
       height: 0.5em;
       border-radius: 50%;
       transform: scale(0);
-      transition: 100ms transform ease-in-out;
+      transition: 120ms transform ease-in-out;
       // box-shadow: inset 1em 1em white;
       background-color: white;
     }
@@ -263,28 +352,39 @@ body {
     &:checked::before {
       transform: scale(1);
     }
-
-    &:focus {
-      background: $primary-color;
-    }
   }
 }
 
-.icon-container {
-  width: 66px;
-  height: 66px;
-  display: inline-grid;
-  place-items: center;
-  margin-right: 12px;
-  position: relative;
-  border-radius: 100%;
-  overflow: hidden;
+.submit-form {
+  width: 100%;
 
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: $primary-color;
-    opacity: 15%;
+  img {
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
   }
+
+  h2 {
+    margin-top: 18px;
+  }
+
+  p {
+    width: 494.67px;
+    margin-top: 8px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  button {
+    display: block;
+    margin: 12px auto;
+  }
+}
+
+.error {
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 20px;
+  color: #962dff;
 }
