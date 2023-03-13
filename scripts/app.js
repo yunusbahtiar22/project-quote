@@ -523,7 +523,7 @@ const SubmitForm = () => {
         </div>
         <hr className="form-divider" />
         <div className="submit-form">
-          <img src="images/Group37301.png" alt="" />
+          <img src="assets/Group37301.png" alt="" />
           <h2 className="display-3 text-center">Submit your quote request</h2>
           <p className="text-base text-center">
             Please review all the information you previously typed in the past
