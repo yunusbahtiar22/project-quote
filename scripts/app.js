@@ -1,16 +1,21 @@
 const FormContext = React.createContext(null);
 const FormDispatchContext = React.createContext(null);
 
-const isValidEmail = (email) => {
-  const pattern = /^[\w.+\-]+@gmail\.com$/;
-  return email.match(pattern);
+const capitalize = (str) => {
+  const lower = str.toLowerCase();
+  return str.charAt(0).toUpperCase() + lower.slice(1);
 };
 
-const isValidPhone = (number) => {
-  const stringNumber = String(number);
-  const pattern = /^(08)[1-9][0-9]\d{6,9}$/;
-  return stringNumber.match(pattern);
-};
+// const isValidEmail = (email) => {
+//   const pattern = /^[\w.+\-]+@gmail\.com$/;
+//   return email.match(pattern);
+// };
+
+// const isValidPhone = (number) => {
+//   const stringNumber = String(number);
+//   const pattern = /^(08)[1-9][0-9]\d{6,9}$/;
+//   return stringNumber.match(pattern);
+// };
 
 const formReducer = (state, action) => {
   switch (action.type) {
@@ -563,16 +568,24 @@ const SubmitForm = () => {
 
 const TextInput = ({ id, icon, label, errorMessage, ...inputProps }) => {
   const [validationMessage, setValidationMessage] = React.useState("");
+
   const onInvalid = (e) => {
-    console.log(e.target);
+    if (e.target.validity.patternMismatch) {
+      e.target.setCustomValidity(`${capitalize(e.target.name)} is Invalid`);
+    } else if (e.target.validity.valueMissing) {
+      e.target.setCustomValidity(`${capitalize(e.target.name)} is required`);
+    } else {
+      e.target.setCustomValidity("");
+    }
+
     setValidationMessage(e.target.validationMessage);
   };
 
   const onBlur = (e) => {
+    e.target.checkValidity();
     if (validationMessage) {
       setValidationMessage(e.target.validationMessage);
     }
-    console.log(e.target);
   };
 
   return (
