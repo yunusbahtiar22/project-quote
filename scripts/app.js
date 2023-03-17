@@ -6,17 +6,6 @@ const capitalize = (str) => {
   return str.charAt(0).toUpperCase() + lower.slice(1);
 };
 
-// const isValidEmail = (email) => {
-//   const pattern = /^[\w.+\-]+@gmail\.com$/;
-//   return email.match(pattern);
-// };
-
-// const isValidPhone = (number) => {
-//   const stringNumber = String(number);
-//   const pattern = /^(08)[1-9][0-9]\d{6,9}$/;
-//   return stringNumber.match(pattern);
-// };
-
 const formReducer = (state, action) => {
   switch (action.type) {
     case "set_data":
@@ -114,10 +103,12 @@ const Progress = (props) => {
   }
 
   return (
-    <div className="progress">
-      {placeholderBars}
-      {bars}
-      {indicators}
+    <div className="progress-container">
+      <div className="progress">
+        {placeholderBars}
+        {bars}
+        {indicators}
+      </div>
     </div>
   );
 };
@@ -125,24 +116,14 @@ const Progress = (props) => {
 const ContactForm = () => {
   const { data, currentForm } = React.useContext(FormContext);
   const dispatch = React.useContext(FormDispatchContext);
-
-  // const onChangeHandler = (e) => {
-  //   const { name, value } = e.target;
-  //   dispatch({
-  //     type: "set_data",
-  //     payload: {
-  //       ...data,
-  //       [name]: value,
-  //     },
-  //   });
-  // };
+  const [submitted, setSubmitted] = React.useState(false);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
     const formElement = e.currentTarget;
     const isValid = formElement.checkValidity();
 
-    formElement.classList.add("form--submitted");
+    setSubmitted((prev) => !prev);
 
     const firstInvalidElement = formElement.querySelector(":invalid");
     firstInvalidElement?.focus();
@@ -164,21 +145,13 @@ const ContactForm = () => {
   };
 
   return (
-    <form onSubmit={onSubmitHandler} noValidate>
+    <form
+      onSubmit={onSubmitHandler}
+      noValidate
+      className={submitted ? "form--submitted" : ""}
+    >
       <div className="form-container">
-        <div className="progress-container">
-          <Progress
-            step={
-              currentForm === 0
-                ? 0.5
-                : currentForm === 1
-                ? 1.5
-                : currentForm === 2
-                ? 2.5
-                : 3
-            }
-          />
-        </div>
+        <Progress step={0.5} />
         <hr className="form-divider" />
         <div className="form">
           <div className="form__header">
@@ -193,6 +166,7 @@ const ContactForm = () => {
             defaultValue={data.name}
             name="name"
             icon={<PersonIcon />}
+            placeholder="Name"
             required
           />
           <TextInput
@@ -201,6 +175,7 @@ const ContactForm = () => {
             defaultValue={data.email}
             name="email"
             icon={<MailIcon />}
+            placeholder="Email"
             pattern="^[\w.+\-]+@gmail\.com$"
             required
           />
@@ -210,6 +185,7 @@ const ContactForm = () => {
             defaultValue={data.phone}
             name="phone"
             icon={<PhoneIcon />}
+            placeholder="Phone"
             pattern="(08)[1-9][0-9]\d{6,9}"
             required
           />
@@ -219,6 +195,7 @@ const ContactForm = () => {
             defaultValue={data.company}
             name="company"
             icon={<BuildingIcon />}
+            placeholder="Company"
             required
           />
         </div>
@@ -254,9 +231,9 @@ const ServiceForm = () => {
   const { data, currentForm } = React.useContext(FormContext);
 
   // logging
-  React.useEffect(() => {
-    console.log(data);
-  });
+  // React.useEffect(() => {
+  //   console.log(data);
+  // });
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -271,19 +248,7 @@ const ServiceForm = () => {
   return (
     <form onSubmit={onSubmitHandler}>
       <div className="form-container">
-        <div className="progress-container">
-          <Progress
-            step={
-              currentForm === 0
-                ? 0.5
-                : currentForm === 1
-                ? 1.5
-                : currentForm === 2
-                ? 2.5
-                : 3
-            }
-          />
-        </div>
+        <Progress step={1.5} />
         <hr className="form-divider" />
         <div className="radio-group">
           <div className="form__header">
@@ -400,19 +365,7 @@ const BudgetForm = () => {
   return (
     <form onSubmit={onSubmitHandler}>
       <div className="form-container">
-        <div className="progress-container">
-          <Progress
-            step={
-              currentForm === 0
-                ? 0.5
-                : currentForm === 1
-                ? 1.5
-                : currentForm === 2
-                ? 2.5
-                : 3
-            }
-          />
-        </div>
+        <Progress step={2.5} />
         <hr className="form-divider" />
         <div className="radio-group">
           <div className="form__header">
@@ -513,19 +466,7 @@ const SubmitForm = () => {
   return (
     <form onSubmit={onSubmitHandler}>
       <div className="form-container">
-        <div className="progress-container">
-          <Progress
-            step={
-              currentForm === 0
-                ? 0.5
-                : currentForm === 1
-                ? 1.5
-                : currentForm === 2
-                ? 2.5
-                : 3
-            }
-          />
-        </div>
+        <Progress step={3} />
         <hr className="form-divider" />
         <div className="submit-form">
           <img src="assets/Group37301.png" alt="" />
@@ -571,7 +512,7 @@ const TextInput = ({ id, icon, label, errorMessage, ...inputProps }) => {
 
   const onInvalid = (e) => {
     if (e.target.validity.patternMismatch) {
-      e.target.setCustomValidity(`${capitalize(e.target.name)} is Invalid`);
+      e.target.setCustomValidity(`${capitalize(e.target.name)} is invalid`);
     } else if (e.target.validity.valueMissing) {
       e.target.setCustomValidity(`${capitalize(e.target.name)} is required`);
     } else {
@@ -617,22 +558,6 @@ const TextInput = ({ id, icon, label, errorMessage, ...inputProps }) => {
     </div>
   );
 };
-
-// const TextInput = React.forwardRef((props, ref) => {
-//   return (
-//     <div className="text-input">
-//       <input
-//         className="text-input__field"
-//         required={props.required}
-//         ref={ref}
-//         type={props.type}
-//         placeholder={props.placeholder}
-//         {...props}
-//       />
-//       {props.icon}
-//     </div>
-//   );
-// });
 
 const PersonIcon = () => {
   return (
